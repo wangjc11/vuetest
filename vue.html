@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .active{
+            color: aqua;
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <ul>
+            <li v-for="(itmes,index) in movies" 
+            @click = "li(index)" 
+            :class = "{active : currentIndex === index}">
+            {{itmes}}</li>
+        </ul>
+    </div>
+
+    <div id="num">
+        <h1 :style = "{fontSize: fs+'px' , color: col}">当前数字：{{number}}</h1>
+        <button v-on:click="add">+</button>
+        <button v-on:click="sub">-</button>
+    </div>
+
+    <div id="trans">
+        <h1 :class="{active:isActive, line:isline}">{{message}}</h1>
+        <h1 :class="getClasses()">{{message}}</h1> 
+        <!-- 调用methods里面的方法，必须要加上（）才可以，但是v-on:click="btn"，btn不加是因为习惯！可以省略，其他的不行 -->
+        <button @click="btn">更换</button>
+        <!-- v-on:click == @click，作用是相同的，都是监听元素的点击事件 -->
+    </div> 
+
+    <div class="price">
+        <h2>总价格：{{totalPrice}}</h2>
+        <!-- v-for = "(itmes) in book" -->
+    </div>
+
+
+    <script src="./vue.js"></script>
+    <script>
+        const vDom = new Vue({
+            el: ".app",  // 这里可以写id，也可以写class
+            data : {
+                // message: "Hello World",
+                movies:["1","2","3","4","5"],
+                // isActive : false,
+                currentIndex: -1,
+            },
+            methods:{
+                li : function(index){
+                    // this.isActive = !this.isActive;
+                    // console.log(index);    index只有li本身可以获取，所以函数可以传参，讲index传过来！！！
+                    this.currentIndex = index;              
+                }
+            }
+
+        });
+        
+        const num = new Vue({
+            el: "#num",
+            data: {
+                number:0 ,
+                fs: 50 ,
+                col: 'red',
+            },
+            methods: {
+                add:function(){
+                    console.log("add方法被执行！");
+                    this.number++  
+                },
+                sub:function(){
+                    console.log("sub方法被执行！");
+                    this.number--;  
+                },
+            },
+        })
+        
+        const trans = new Vue({
+            el: "#trans",
+            data: {
+                message: "你好呀，余亚倩！",
+                isActive: true,
+                isline:true,
+            },
+            methods: {
+                btn:function(){
+                    this.isActive = !this.isActive;
+                },
+                getClasses:function(){
+                    return {active:this.isActive, line:this.isline}
+                }
+            },
+        })
+
+        const pri = new Vue({
+            el: ".price",
+            data : {
+                books:[
+                    {id:1 , price : 10},
+                    {id:2 , price : 20},
+                    {id:3 , price : 30},
+                ]
+            },
+            computed: {
+                totalPrice : function(){
+                    let result = 0
+                    // console.log(this.books[1].price);
+                    
+                    /* for(let i =0; i<this.books.length; i++){
+                        result += this.books[i].price
+                    }
+                    return result
+                    */
+                    return this.books[1].price + this.books[2].price + this.books[0].price
+                }
+            },
+        })
+    </script>
+</body>
+</html>

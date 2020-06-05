@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="app">
+        <h3>{{message}}</h3> 
+        <input type="text" :placeholder=message >
+        <button @click= "btn">切换类型</button>
+    </div>
+
+    <script src="./vue.js"></script>
+    <script>
+        const app = new Vue({
+            el: ".app",
+            data: {
+                message: "用户账号",
+                trans : true,
+                // abc : "用户账号"
+            },
+            methods: {
+                btn(){
+                    this.trans = !this.trans;
+                    console.log(this.trans);
+                    if(this.trans){
+                        this.message = "用户账号"
+                        // this.abc = "用户账号"
+                    }else{
+                        this.message = "邮箱登陆"
+                        // this.abc = "邮箱登陆"
+                    }
+                },
+            },
+        })
+    </script>
+</body>
+</html>

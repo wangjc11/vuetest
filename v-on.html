@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="app">
+        <button @click.once = "btn(123,$event)">{{message}}</button>
+        <!-- 1、一个参数都不传，浏览器自动将event事件传给abc，所以第二个参数为undefined
+        2、只传一个参数，系统会将该参数传给abc，但是不会默认传递event事件
+        3、两个参数都传递，手动获取event事件：$event -->
+        <input @keyup.enter = "key">
+    </div>
+
+    <script src="./vue.js"></script>
+    <script>
+        var app = new Vue({
+            el : ".app",
+            data : {
+                message:"按钮",
+                enter : "你是猪"
+            },
+            methods: {
+                btn (abc , event) {
+                    console.log("-------" , abc , event);
+                    
+                },
+                key(){
+                    console.log(this.enter);   // "enter"才是字符串，其他的时候都是默认为变量，但是基本数据类型则不会，比如123.
+                    
+                },
+            },
+        })
+    </script>
+</body>
+</html>

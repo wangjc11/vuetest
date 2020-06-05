@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="app">
+        <cpn :cmessage = "message" :cbooks = "books"></cpn>
+        <mycpn1></mycpn1>
+        <cpn1 :cmessage = "message" :cbooks = "books"></cpn1>
+        <cpn2 @eventclick = "cpnclick"></cpn2>
+    </div>
+
+    <template id="cpn1">
+        <div>
+            <h1>{{cmessage}}</h1>
+            <ul>
+                <li v-for = "its in cbooks">{{its}}</li>
+            </ul>
+        </div>
+    </template>
+
+    <template id="cpn2">
+        <div>   
+            <!-- 模板的外面必须要用div给套住，不然会报错 -->
+            <button v-for = " it in movies" @click = "btnClick(it)">{{it}}</button>
+        </div>
+    </template>
+
+    <script src="./vue.js"></script>
+    <script>
+        const cpnC1 = Vue.extend({
+            template: `
+            <div>
+              <h1>你好呀余亚倩</h1>
+            </div>
+            `
+        })
+
+        const cpn1 = {
+            // 必须有个div将所有内容包起来，这样才能调用子组件，
+            template: "#cpn1",
+            /* components: {
+                cpn1 : cpnC1    // 这里是注册子组件
+            } */
+            props : {
+                cmessage : {
+                    type: String,
+                    default : "abv",
+                },
+                cbooks : {
+                    type: Array,
+                    default(){
+                        return []
+                    },
+                }
+            }
+        }
+
+        const cpn2 = {
+            template : "#cpn2",
+            data() {
+                return {
+                    movies: ["火影忍者","琅琊榜","星际穿越","海王"]
+                }
+            },
+            methods: {
+                btnClick(it){
+                    // console.log(it);
+                    this.$emit('eventclick', it)
+                    // 'eventclick' 为函数名，该函数写在父组件中，让父组件拿到数据it，且父元素不用传入参数it，因为该函数只有it
+                    // 会自动传入，因为没有浏览器事件，不会默认传入event，该事件是由子组件引发的。
+                }
+            },
+        }
+
+        Vue.component("mycpn1",cpnC1)
+
+        const app = new Vue({
+            el: ".app",
+            data : {
+                books:["1","12","123"],
+                message: "你好呀",
+            },
+            methods: {
+                cpnclick(it){
+                    console.log(it)
+                    
+                },
+            },
+            components:{
+                cpn : {    // 这里是简化写法，直接注册，省略掉extend()
+                    // 必须有个div将所有内容包起来，这样才能调用子组件，
+                    template: "#cpn1",
+                    /* components: {
+                        cpn1 : cpnC1    // 这里是注册子组件
+                    } */
+                    props: {
+                        cmessage: {
+                            type: String,
+                            default: "abv",
+                        },
+                        cbooks: {
+                            type: Array,
+                            default() {
+                                return []
+                            },
+                        }
+                    }
+                },
+
+                cpn1 ,  // 这里es6 属性增强写法！！！！！  直接写对象名即可传递
+
+                cpn2 , 
+            },
+            
+        })
+    </script>
+</body>
+</html>

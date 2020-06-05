@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="app">
+        <div v-if = "books.length">
+            <table>
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>书籍名称</th>
+                        <th>出版日期</th>
+                        <th>价格</th>
+                        <th>购买数量</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for = "(item, index) in books">
+                        <!-- (index, name , date, price) 这种不行
+                            遍历只能得到元素以及index，元素对象的相关属性都是再外面写的 -->
+                        <td>{{index+1}}</td>
+                        <td>{{item.name}}</td>
+                        <td>{{item.date}}</td>
+                        <td>{{item.price | showprice}}</td>
+                        <td>
+                            <button @click = "cre(index)" :key="item.name">-</button>
+                            <span>{{item.number}}</span>
+                            <button @click = "add(index)">+</button>
+                        </td>
+                        <td>
+                            <button @click = "del(index)">删除</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <span>总价格：{{totalprice | showprice}}</span>
+        </div>
+        <div v-else>购物车为空</div>
+    </div>
+    <br>
+    <div class="sele">
+        <input type="radio" value="男" v-model = "sex">男
+        <input type="radio" value="女" v-model = "sex">女
+        <h1>你选择的性别是：{{sex}}</h1>
+    </div>
+
+    <script src="./vue.js"></script>
+    <script>
+        const app = new Vue({
+            el: ".app" , 
+            data : {
+                number: -1,
+                books: [
+                    {name: "《算法1》", date: '1-2' , price: 100 ,number: 1},
+                    {name: "《算法2》", date: '1-2' , price: 100 ,number: 1},
+                    {name: "《算法3》", date: '1-2' , price: 100 ,number: 1},
+                    {name: "《算法4》", date: '1-2' , price: 100 ,number: 1},
+                ],
+            },
+            computed: {
+                totalprice : function(){
+                    /* let result = 0
+                    for(let i =0; i<this.books.length; i++){
+                        let pri = this.books[i].price * this.books[i].number
+                        result += pri
+                    }
+                    return result */
+                    return this.books.reduce(function(pre,book){
+                        return pre + book.price * book.number
+                    },0)
+                }
+            },
+            methods: {
+                add(index){
+                    this.books[index].number++
+                },
+                cre(index){
+                    if(this.books[index].number > 1){      // 如果 >1 则数量不会出现0，直接删除，>=1 则会出现0，再删除               
+                        this.books[index].number--
+                    }else{
+                        // this.books[index].number = 0
+                        this.books.splice(index,1)
+                    }
+                },
+                del(index){
+                    this.books.splice(index,1)
+                }
+            },
+            filters : {
+                showprice(price){
+                    return "￥"+ price.toFixed(2)
+                }
+            }
+        })
+    
+        const sele = new Vue({
+            el: ".sele",
+            data: {
+                sex : "男"
+            },
+        })
+    </script>
+</body>
+</html>
